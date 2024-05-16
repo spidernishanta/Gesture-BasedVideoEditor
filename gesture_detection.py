@@ -7,8 +7,8 @@ mp_hands = mp.solutions.hands
 hands = mp_hands.Hands(min_detection_confidence=0.7)
 mp_drawing = mp.solutions.drawing_utils
 
-gesture_log = []  # List to hold gesture timestamps
-recording_start_time = time.time()  # Record the start time of the recording session
+gesture_log = []  
+recording_start_time = time.time()  
 
 def detect_gesture(image, hand_landmarks, hand_no=0):
     if hand_landmarks:
@@ -37,18 +37,17 @@ while cap.isOpened():
             mp_drawing.draw_landmarks(image, hand_landmarks, mp_hands.HAND_CONNECTIONS)
             gesture = detect_gesture(image, results.multi_hand_landmarks)
             if gesture:
-                current_time = time.time() - recording_start_time  # Current timestamp in seconds since start
+                current_time = time.time() - recording_start_time  
                 gesture_log.append({"gesture": gesture, "timestamp": current_time})
                 print(f"Gesture {gesture} detected at {current_time:.2f} seconds")
 
     cv2.imshow('Webcam', image)
     
-    if cv2.waitKey(5) & 0xFF == 27:  # Press 'ESC' to exit
+    if cv2.waitKey(5) & 0xFF == 27:
         break
 
 cap.release()
 cv2.destroyAllWindows()
 
-# Saving the gesture timestamps to a file
 with open('gesture_log.json', 'w') as f:
     json.dump(gesture_log, f)
